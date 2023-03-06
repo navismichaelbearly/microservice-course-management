@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="1" author="navis">
+        <sql>
+            create table course(
+                id BIGSERIAL primary key ,
+                title varchar(255) not null,
+                author varchar(255) not null,
+                category varchar(255),
+                publish_date DATE
+            )
+        </sql>
+        <rollback>
+            drop table course;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2" author="navis">
+        <sql>
+            create table transaction(
+               id BIGSERIAL primary key ,
+               course_id BIGINT not null,
+               user_id BIGINT not null ,
+               date_of_issue TIMESTAMP,
+               CONSTRAINT fk_tran_course
+                    FOREIGN KEY (course_id)
+                        references course(id) on delete cascade on update cascade
+            )
+        </sql>
+        <rollback>
+            drop table transaction;
+        </rollback>
+    </changeSet>
+    <changeSet id="3" author="navis">
+        <sql>
+            insert into course (title, author, category, publish_date) values ('SBMS-25', 'raghu', 'Programming', NOW());
+            insert into course (title, author, category, publish_date) values ('Java and Springboot', 'Vijaybaskar', 'Programming', NOW());
+            insert into course (title, author, category, publish_date) values ('Spring boot actuator', 'Kesha Williams', 'Programming', NOW());
+            insert into course (title, author, category, publish_date) values ('Spring: The Big Picture', 'Dustin Schultz', 'Programming', NOW());
+            insert into course (title, author, category, publish_date) values ('AWS Fundamentals', 'Jeff Bezos', 'Administration', NOW());
+        </sql>
+        <rollback>
+            truncate table course;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
